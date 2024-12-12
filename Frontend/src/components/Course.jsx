@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Cards from './Cards'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import { BOOK_API_END_POINT } from '../utils/constant';
 
 function Course() {
 
@@ -10,7 +11,7 @@ function Course() {
         const getBook = async()=>{
             try {
                 
-                const res = await axios.get('http://localhost:4001/book');
+                const res = await axios.get(`${BOOK_API_END_POINT}`);
                 // console.log(res.data);
                 setBook(res.data);
             } catch (error) {
