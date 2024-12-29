@@ -9,8 +9,10 @@ const app = express();
 
 
 app.use(cors({
-  origin:'https://book-store-app-fr.vercel.app/',
-  credentials:true
+  origin: 'https://book-store-app-fr.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -24,13 +26,11 @@ const PORT = process.env.PORT || 4000;
 const URI = process.env.MongoDBURI;
 
 //connect to mongoDB
-try {
-  mongoose.connect(URI);
+mongoose.connect(URI).then(() => {
   console.log("Connected to MongoDB");
-
-} catch (error) {
-  console.log("error: ", error);
-}
+}).catch((error) => {
+  console.error("MongoDB connection error:", error);
+});
 
 
 //defining routes
