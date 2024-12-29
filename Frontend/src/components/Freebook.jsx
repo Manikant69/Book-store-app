@@ -6,7 +6,7 @@ import Slider from "react-slick";
 
 import Cards from './Cards';
 import axios from 'axios';
-import { BOOK_API_END_POINT } from '../utils/constant';
+import { BOOK_API_END_POINT } from '../utils/constant.js';
 
 const Freebook = () => {
 

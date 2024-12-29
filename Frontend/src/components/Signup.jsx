@@ -4,7 +4,7 @@ import Login from './Login'
 import { useForm } from "react-hook-form"
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { USER_API_END_POINT } from '../utils/constant';
+import { USER_API_END_POINT } from '../utils/constant.js';
 
 function Signup() {
 

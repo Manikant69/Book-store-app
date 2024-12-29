@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Cards from './Cards'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import { BOOK_API_END_POINT } from '../utils/constant';
+import { BOOK_API_END_POINT } from '../utils/constant.js';
 
 function Course() {
 
