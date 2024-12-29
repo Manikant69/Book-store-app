@@ -4,14 +4,21 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import bookRoute from './route/book.route.js';
-import userRoute from './route/user.route.js'
+import userRoute from './route/user.route.js';
 const app = express();
 
 
-app.use(cors());
+app.use(cors({
+  origin:'https://book-store-app-fr.vercel.app/',
+  credentials:true
+}));
 app.use(express.json());
 
-dotenv.config(); 
+dotenv.config(
+  {
+    path:'./env'
+  }
+); 
 
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MongoDBURI;
