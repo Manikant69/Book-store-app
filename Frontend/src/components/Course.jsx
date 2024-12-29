@@ -11,7 +11,7 @@ function Course() {
         const getBook = async()=>{
             try {
                 
-                const res = await axios.get(`${BOOK_API_END_POINT}`);
+                const res = await axios.get(`${BOOK_API_END_POINT}`,{withCredentials:true,});
                 // console.log(res.data);
                 setBook(res.data);
             } catch (error) {

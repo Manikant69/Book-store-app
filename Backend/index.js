@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose, { connect } from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -28,7 +27,6 @@ dotenv.config(
 ); 
 
 const PORT = process.env.PORT || 4000;
-const URI = process.env.MongoDBURI;
 
 //defining routes
 app.use('/book', bookRoute);

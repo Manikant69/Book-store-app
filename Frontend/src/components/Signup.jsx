@@ -26,7 +26,9 @@ function Signup() {
             password : data.password,
         };
 
-        await axios.post(`${USER_API_END_POINT}/signup`, userInfo)
+        await axios.post(`${USER_API_END_POINT}/signup`, userInfo,{
+            withCredentials:true,
+        })
         .then((res)=>{
             console.log(res.data);
             if(res.data){

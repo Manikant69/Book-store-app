@@ -15,7 +15,9 @@ const Freebook = () => {
       const getBook = async()=>{
           try {
               
-              const res = await axios.get(`${BOOK_API_END_POINT}`);
+              const res = await axios.get(`${BOOK_API_END_POINT}`,{
+                withCredentials:true
+              });
 
               //filtering the free books
               setBook(res.data.filter((data) => data.category==='Free'));
