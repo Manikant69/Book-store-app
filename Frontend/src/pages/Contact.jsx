@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import { Navbar } from '../components/navbar/Navbar';
 import { Footer } from '../components/layout/Footer';
+import { DEFAULT_CONTACT_INFO } from '../utils/constants';
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -56,17 +57,17 @@ function Contact() {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
               <Mail className="h-6 w-6 text-teal-600 dark:text-teal-400 mb-3" />
               <h3 className="font-semibold mb-1 dark:text-white">Email</h3>
-              <p className="text-gray-600 dark:text-gray-400">support@bookstore.com</p>
+              <p className="text-gray-600 dark:text-gray-400">{DEFAULT_CONTACT_INFO.email}</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
               <Phone className="h-6 w-6 text-teal-600 dark:text-teal-400 mb-3" />
               <h3 className="font-semibold mb-1 dark:text-white">Phone</h3>
-              <p className="text-gray-600 dark:text-gray-400">+1 (555) 123-4567</p>
+              <p className="text-gray-600 dark:text-gray-400">{DEFAULT_CONTACT_INFO.phone}</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
               <MapPin className="h-6 w-6 text-teal-600 dark:text-teal-400 mb-3" />
               <h3 className="font-semibold mb-1 dark:text-white">Address</h3>
-              <p className="text-gray-600 dark:text-gray-400">123 Book Street, Reading City, RC 12345</p>
+              <p className="text-gray-600 dark:text-gray-400">{DEFAULT_CONTACT_INFO.address}</p>
             </div>
           </div>
 

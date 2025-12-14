@@ -256,7 +256,7 @@ const updateOrderStatus = async (req, res) => {
 // Admin: Get all orders
 const getAllOrders = async (req, res) => {
     try {
-        const { page = 1, limit = 10, status, search } = req.query;
+        const { page = 1, limit = PAGINATION_LIMITS.BOOKS_PER_PAGE, status, search } = req.query;
         let query = {};
 
         // Filter by status if specified

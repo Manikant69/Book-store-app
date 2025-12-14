@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { SETTINGS_API_END_POINT } from '../utils/constants';
 
-const API_BASE_URL = 'http://localhost:5001/api/settings';
+const API_BASE_URL = SETTINGS_API_END_POINT;
 
 export const useSiteSettings = () => {
   const [settings, setSettings] = useState(null);

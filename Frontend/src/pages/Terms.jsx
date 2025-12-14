@@ -1,6 +1,7 @@
 import { Navbar } from '../components/navbar/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import { DEFAULT_CONTACT_INFO } from '../utils/constants';
 
 export default function Terms() {
   const { settings } = useSiteSettings();
@@ -132,9 +133,9 @@ export default function Terms() {
                 If you have any questions about these Terms of Service, please contact us:
               </p>
               <div className="text-gray-700 dark:text-gray-300">
-                <p>Email: {settings?.email || 'legal@bookspot.com'}</p>
-                <p>Phone: {settings?.phone || '+91-9876543210'}</p>
-                <p>Address: {settings?.address || '123 Book Street, Library City, India - 110001'}</p>
+                <p>Email: {settings?.email || DEFAULT_CONTACT_INFO.legal.email}</p>
+                <p>Phone: {settings?.phone || DEFAULT_CONTACT_INFO.phone}</p>
+                <p>Address: {settings?.address || DEFAULT_CONTACT_INFO.address}</p>
               </div>
             </section>
           </div>

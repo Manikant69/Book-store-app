@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { GENRE_API_END_POINT } from '../utils/constants';
 
-const API_BASE_URL = 'http://localhost:5001/api/genres';
+const API_BASE_URL = GENRE_API_END_POINT;
 
 export const usePopularGenres = (limit = 6) => {
   const [genres, setGenres] = useState([]);

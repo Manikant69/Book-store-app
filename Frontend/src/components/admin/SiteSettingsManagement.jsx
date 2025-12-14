@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import { Settings, Save, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Toast from '../../utils/toast';
+import { DEFAULT_SITE_SETTINGS } from '../../utils/constants';
 
 export function SiteSettingsManagement() {
   const { settings, loading, updateContactInfo, updateSocialLinks } = useSiteSettings();
@@ -130,7 +131,7 @@ export function SiteSettingsManagement() {
                 value={contactForm.email}
                 onChange={handleContactChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-                placeholder="support@bookspot.com"
+                placeholder={DEFAULT_SITE_SETTINGS.email}
                 required
               />
             </div>
@@ -146,7 +147,7 @@ export function SiteSettingsManagement() {
                 value={contactForm.phone}
                 onChange={handleContactChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-                placeholder="+91-9876543210"
+                placeholder={DEFAULT_SITE_SETTINGS.phone}
                 required
               />
             </div>
@@ -162,7 +163,7 @@ export function SiteSettingsManagement() {
                 onChange={handleContactChange}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-                placeholder="123 Book Street, Library City, India - 110001"
+                placeholder={DEFAULT_SITE_SETTINGS.address}
                 required
               />
             </div>

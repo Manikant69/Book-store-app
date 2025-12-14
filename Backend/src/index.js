@@ -1,17 +1,18 @@
 import dotenv from 'dotenv';
 import connectDB from './db/index.js';
 import app from './app.js';
+import { PORT } from './constants.js';
 
 dotenv.config({
   path:"./.env"
 });
 
-const PORT = process.env.PORT || 4000;
+const SERVER_PORT = process.env.PORT || PORT;
 
 
 connectDB().then(()=>{
-  app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`)
+  app.listen(SERVER_PORT, () => {
+    console.log(`Server is listening on port ${SERVER_PORT}`)
   })
 })
 .catch((error)=>{

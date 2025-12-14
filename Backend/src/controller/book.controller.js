@@ -1,9 +1,10 @@
 import Book from "../model/book.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { PAGINATION_LIMITS } from "../utils/constants.js";
 
 const getAllBooks = async (req, res)=>{
     try {
-        const { genre, sortBy, page = 1, limit = 10, search, maxPrice, minRating, language } = req.query;
+        const { genre, sortBy, page = 1, limit = PAGINATION_LIMITS.BOOKS_PER_PAGE, search, maxPrice, minRating, language } = req.query;
         let query = {};
 
         // Search functionality
@@ -74,7 +75,7 @@ const getAllBooks = async (req, res)=>{
 // Search books with enhanced filtering
 const searchBooks = async (req, res) => {
     try {
-        const { q, genre, sortBy, page = 1, limit = 12, maxPrice, minRating, language } = req.query;
+        const { q, genre, sortBy, page = 1, limit = PAGINATION_LIMITS.BOOKS_PER_PAGE, maxPrice, minRating, language } = req.query;
         
         if (!q || q.trim() === '') {
             return res.status(400).json({
@@ -406,7 +407,7 @@ const getBooksByGenre = async(req, res) => {
 
 const getPopularBooks = async(req, res) => {
     try {
-        const { limit = 10 } = req.query;
+        const { limit = PAGINATION_LIMITS.BOOKS_PER_PAGE } = req.query;
         const books = await Book.find()
             .sort({ rating: -1 })
             .limit(parseInt(limit));

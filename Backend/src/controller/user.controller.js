@@ -208,7 +208,7 @@ export const changePassword = async(req, res) => {
 // Admin: Get all users
 export const getAllUsers = async (req, res) => {
     try {
-        const { page = 1, limit = 10, role, search } = req.query;
+        const { page = 1, limit = PAGINATION_LIMITS.BOOKS_PER_PAGE, role, search } = req.query;
         let query = {};
 
         // Filter by role if specified
