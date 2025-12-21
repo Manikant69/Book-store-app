@@ -8,7 +8,6 @@ export const useDynamicCart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
   const [initialized, setInitialized] = useState(false);
   
   const userId = localStorage.getItem('userId');
@@ -39,15 +38,21 @@ export const useDynamicCart = () => {
         const transformedItems = cartData.cart.map(item => {
           console.log('Processing cart item:', item); // Debug log
           
+          // Handle both possible data structures from backend
+          const book = item.book || {};
+          
           return {
-            id: item.book?._id || item.bookId,
-            _id: item.book?._id || item.bookId,
-            name: item.book?.name || 'Unknown Book',
-            authorName: item.book?.authorName || 'Unknown Author',
-            price: item.price || item.book?.price || 0,
-            coverImage: item.book?.coverImage || '',
+            id: book._id || item.bookId,
+            _id: book._id || item.bookId,
+            name: book.name || book.title || 'Unknown Book',
+            title: book.name || book.title || 'Unknown Book', // Add title for compatibility
+            authorName: book.authorName || book.author || 'Unknown Author',
+            author: book.authorName || book.author || 'Unknown Author', // Add author for compatibility
+            price: item.price || book.price || 0,
+            coverImage: book.coverImage || book.coverUrl || '',
+            coverUrl: book.coverImage || book.coverUrl || '', // Add coverUrl for compatibility
             quantity: item.quantity || 1,
-            inStock: item.book?.inStock !== false
+            inStock: book.inStock !== false
           };
         });
         
@@ -93,11 +98,8 @@ export const useDynamicCart = () => {
     setLoading(true);
     try {
       await apiAddToCart(userId, book._id, 1);
-      // Refresh cart data after a delay to prevent rapid API calls
-      setTimeout(() => {
-        fetchCart();
-      }, 100);
-      setIsOpen(true);
+      // Refresh cart data immediately
+      await fetchCart();
     } catch (error) {
       console.error('Error adding to cart:', error);
       Toast.error('Failed to add item to cart');
@@ -110,15 +112,16 @@ export const useDynamicCart = () => {
   const updateQuantity = async (bookId, newQuantity) => {
     if (!userId || newQuantity < 1) return;
 
+    console.log('Updating quantity:', { userId, bookId, newQuantity }); // Debug log
     setLoading(true);
     try {
-      await apiUpdateQuantity(userId, bookId, newQuantity);
-      // Refresh cart data after a delay
-      setTimeout(() => {
-        fetchCart();
-      }, 100);
+      const result = await apiUpdateQuantity(userId, bookId, newQuantity);
+      console.log('Update quantity result:', result); // Debug log
+      // Refresh cart data immediately
+      await fetchCart();
     } catch (error) {
       console.error('Error updating quantity:', error);
+      Toast.error('Failed to update quantity');
     } finally {
       setLoading(false);
     }
@@ -128,15 +131,17 @@ export const useDynamicCart = () => {
   const removeFromCart = async (bookId) => {
     if (!userId) return;
 
+    console.log('Removing from cart:', { userId, bookId }); // Debug log
     setLoading(true);
     try {
-      await apiRemoveFromCart(userId, bookId);
-      // Refresh cart data after a delay
-      setTimeout(() => {
-        fetchCart();
-      }, 100);
+      const result = await apiRemoveFromCart(userId, bookId);
+      console.log('Remove from cart result:', result); // Debug log
+      // Refresh cart data immediately
+      await fetchCart();
+      Toast.success('Item removed from cart');
     } catch (error) {
       console.error('Error removing from cart:', error);
+      Toast.error('Failed to remove item from cart');
     } finally {
       setLoading(false);
     }
@@ -159,11 +164,6 @@ export const useDynamicCart = () => {
     }
   };
 
-  // Toggle cart sidebar
-  const toggleCart = () => {
-    setIsOpen(!isOpen);
-  };
-
   // Initialize cart data on mount - only once
   useEffect(() => {
     if (userId && !initialized) {
@@ -175,12 +175,10 @@ export const useDynamicCart = () => {
     cartItems,
     loading,
     total,
-    isOpen,
     addToCart,
     updateQuantity,
     removeFromCart,
     clearCart,
-    toggleCart,
     fetchCart,
     totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0)
   };

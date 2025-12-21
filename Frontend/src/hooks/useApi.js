@@ -225,7 +225,6 @@ export const useCart = () => {
   const removeFromCart = async (userId, bookId) => {
     try {
       const res = await axios.delete(`${CART_API_END_POINT}/${userId}/${bookId}`);
-      Toast.success('Removed from cart');
       return res.data.cart;
     } catch (error) {
       Toast.error('Error removing from cart');

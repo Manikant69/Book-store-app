@@ -20,9 +20,6 @@ export function CartProvider({ children }) {
       case 'UPDATE_QUANTITY':
         cartData.updateQuantity(action.payload.id, action.payload.quantity);
         break;
-      case 'TOGGLE_CART':
-        cartData.toggleCart();
-        break;
       case 'CLEAR_CART':
         cartData.clearCart();
         break;
@@ -35,7 +32,6 @@ export function CartProvider({ children }) {
   const contextValue = useMemo(() => ({
     state: {
       items: cartData.cartItems,
-      isOpen: cartData.isOpen,
       total: cartData.total,
       loading: cartData.loading
     },
@@ -45,12 +41,10 @@ export function CartProvider({ children }) {
     updateQuantity: cartData.updateQuantity,
     removeFromCart: cartData.removeFromCart,
     clearCart: cartData.clearCart,
-    toggleCart: cartData.toggleCart,
     fetchCart: cartData.fetchCart,
     totalItems: cartData.totalItems
   }), [
     cartData.cartItems,
-    cartData.isOpen,
     cartData.total,
     cartData.loading,
     cartData.totalItems,
@@ -59,7 +53,6 @@ export function CartProvider({ children }) {
     cartData.updateQuantity,
     cartData.removeFromCart,
     cartData.clearCart,
-    cartData.toggleCart,
     cartData.fetchCart
   ]);
 

@@ -1,17 +1,21 @@
 import React from 'react';
-import { Menu, X, LogOut, Package, Heart } from 'lucide-react';
+import { Menu, X, LogOut, Package, Heart, ShoppingCart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { NavLink } from './NavLink';
 import { ThemeToggle } from './ThemeToggle';
+import { useCart } from '../../context/CartContext';
 
 export function MobileMenu() {
   const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { state } = useCart();
   
   const userId = localStorage.getItem('userId');
   const userName = localStorage.getItem('userName');
   const userEmail = localStorage.getItem('userEmail');
   const userRole = localStorage.getItem('userRole');
+
+  const totalItems = state.items.length; // Count of unique items
 
   const handleLogout = () => {
     localStorage.removeItem('userId');
@@ -52,6 +56,24 @@ export function MobileMenu() {
             >
               Browse Books
             </Link>
+            
+            {/* Cart Link */}
+            <Link
+              to="/cart"
+              onClick={closeMenu}
+              className="flex items-center justify-between px-4 py-3 text-gray-700 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+            >
+              <div className="flex items-center gap-3">
+                <ShoppingCart className="h-5 w-5" />
+                Cart
+              </div>
+              {totalItems > 0 && (
+                <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-full">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+
             {userRole === 'admin' && (
               <Link
                 to="/admin"

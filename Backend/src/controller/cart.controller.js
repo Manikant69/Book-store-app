@@ -32,13 +32,13 @@ const addToCart = async (req, res) => {
             user.cart = [];
         }
 
-        const existingItem = user.cart.find(item => item.bookId === bookId);
+        const existingItem = user.cart.find(item => item.bookId.toString() === bookId.toString());
 
         if (existingItem) {
             existingItem.quantity += quantity;
         } else {
             user.cart.push({
-                bookId,
+                bookId: bookId.toString(),
                 quantity,
                 price: book.price
             });
@@ -117,7 +117,19 @@ const removeFromCart = async (req, res) => {
             });
         }
 
-        user.cart = user.cart.filter(item => item.bookId !== bookId);
+        // Convert bookId to string for comparison
+        const bookIdStr = bookId.toString();
+        const initialLength = user.cart.length;
+        
+        user.cart = user.cart.filter(item => item.bookId.toString() !== bookIdStr);
+        
+        if (user.cart.length === initialLength) {
+            return res.status(404).json({
+                success: false,
+                message: "Item not found in cart"
+            });
+        }
+        
         await user.save();
 
         return res.status(200).json({
@@ -156,7 +168,9 @@ const updateCartQuantity = async (req, res) => {
             });
         }
 
-        const cartItem = user.cart.find(item => item.bookId === bookId);
+        // Convert bookId to string for comparison
+        const bookIdStr = bookId.toString();
+        const cartItem = user.cart.find(item => item.bookId.toString() === bookIdStr);
 
         if (!cartItem) {
             return res.status(404).json({

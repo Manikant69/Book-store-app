@@ -17,7 +17,6 @@ import Wishlist from './pages/Wishlist';
 import FAQ from './pages/FAQ';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
-import { CartSidebar } from './components/cart/CartSidebar';
 import axios from 'axios';
 import { BOOK_API_END_POINT } from './utils/constants';
 
@@ -68,7 +67,6 @@ const App = () => {
           <Route path="/books/:bookId" element={<BookDetails />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-        <CartSidebar />
       </Router>
     </BookProvider>
     </CartProvider>

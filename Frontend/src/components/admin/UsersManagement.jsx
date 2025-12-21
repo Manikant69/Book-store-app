@@ -112,17 +112,17 @@ export function UsersManagement() {
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
                           <div className="h-10 w-10 rounded-full bg-teal-500 flex items-center justify-center">
-                            <span className="text-white font-medium">
-                              {user.fullName?.[0]?.toUpperCase()}
+                            <span className="text-white font-medium text-sm">
+                              {user.fullname?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || '?'}
                             </span>
                           </div>
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {user.fullName}
+                            {user.fullname}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            @{user.userName}
+                            {user.userName}
                           </div>
                         </div>
                       </div>
@@ -141,10 +141,10 @@ export function UsersManagement() {
                           <option value="admin">Admin</option>
                         </select>
                       ) : (
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        <span className={`px-3 py-1 inline-flex items-center justify-center text-xs leading-5 font-semibold rounded-full ${
                           user.role === 'admin' 
-                            ? 'bg-purple-100 text-purple-800' 
-                            : 'bg-green-100 text-green-800'
+                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300' 
+                            : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                         }`}>
                           {user.role === 'admin' ? (
                             <><Shield className="h-3 w-3 mr-1" /> Admin</>

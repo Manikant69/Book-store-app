@@ -22,11 +22,8 @@ const createOrder = async (req, res) => {
             });
         }
 
-        if (!user.orders) {
-            user.orders = [];
-        }
-
-        const order = {
+        // Create the order data structure
+        const orderData = {
             orderId: `ORD-${Date.now()}`,
             items: items.map(item => ({
                 bookId: item.bookId,
@@ -41,14 +38,51 @@ const createOrder = async (req, res) => {
             updatedAt: new Date()
         };
 
-        user.orders.push(order);
-        user.cart = []; // Clear cart after order
+        // Create separate Order document for admin visibility
+        const orderItems = [];
+        for (const item of items) {
+            const book = await Book.findById(item.bookId);
+            if (book) {
+                orderItems.push({
+                    bookId: item.bookId,
+                    bookName: book.name,
+                    quantity: item.quantity,
+                    price: item.price
+                });
+            }
+        }
+
+        const newOrder = new Order({
+            userId: userId,
+            userName: user.fullname,
+            items: orderItems,
+            totalAmount: orderData.totalAmount,
+            shippingAddress: {
+                street: orderData.shippingAddress,
+                city: "", // You can expand this later
+                state: "",
+                zipCode: "",
+                country: ""
+            },
+            paymentMethod: orderData.paymentMethod === "COD" ? "cash_on_delivery" : orderData.paymentMethod
+        });
+
+        await newOrder.save();
+
+        // Also add to user's orders array for user order history
+        if (!user.orders) {
+            user.orders = [];
+        }
+        user.orders.push(orderData);
+        
+        // Clear cart after order
+        user.cart = [];
         await user.save();
 
         return res.status(201).json({
             success: true,
             message: "Order created successfully",
-            order
+            order: orderData
         });
 
     } catch (error) {

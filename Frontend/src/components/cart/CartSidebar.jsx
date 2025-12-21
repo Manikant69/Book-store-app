@@ -128,10 +128,14 @@ export function CartSidebar() {
                 >
                   View Cart
                 </Link>
-                <button className="w-full py-3 bg-gray-900 text-white rounded-lg 
-                                 hover:bg-gray-800 transition-colors duration-200">
+                <Link
+                  to="/cart"
+                  onClick={() => dispatch({ type: 'TOGGLE_CART' })}
+                  className="block w-full py-3 bg-gray-900 text-white text-center rounded-lg 
+                           hover:bg-gray-800 transition-colors duration-200"
+                >
                   Checkout
-                </button>
+                </Link>
               </div>
             </div>
           )}
