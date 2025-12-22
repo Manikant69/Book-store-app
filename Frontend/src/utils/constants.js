@@ -1,5 +1,6 @@
 // Base API URL - change this for different environments
-export const API_BASE_URL =  "http://localhost:5001/api";
+export const API_BASE_URL =  "https://bookspot-1vwv.onrender.com/api" || "http://localhost:5001/api";
+// export const API_BASE_URL =  "http://localhost:5001/api";
 
 // API Endpoints
 export const USER_API_END_POINT = `${API_BASE_URL}/users`;
