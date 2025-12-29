@@ -7,6 +7,11 @@ const router = express.Router();
 router.get("/admin/all", getAllOrders);
 router.put("/admin/:orderId/status", updateOrderStatusAdmin);
 
+// Test route to check if orders API is reachable
+router.get("/test", (req, res) => {
+    res.json({ success: true, message: "Orders API is reachable", timestamp: new Date().toISOString() });
+});
+
 // Public routes
 router.post("/create", createOrder);
 router.get("/:userId", getUserOrders);

@@ -230,7 +230,8 @@ function BookDetails() {
                   onClick={handleAddToCart}
                   disabled={!book.inStock}
                   className="flex-1 bg-teal-600 text-white px-6 py-3 rounded-lg 
-                             hover:bg-teal-700 transition disabled:opacity-50"
+                             hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed
+                             flex items-center justify-center gap-2 font-medium"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart

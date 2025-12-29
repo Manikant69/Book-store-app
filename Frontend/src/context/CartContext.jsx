@@ -33,7 +33,8 @@ export function CartProvider({ children }) {
     state: {
       items: cartData.cartItems,
       total: cartData.total,
-      loading: cartData.loading
+      loading: cartData.loading,
+      itemLoading: cartData.itemLoading || {} // Add item-specific loading
     },
     dispatch,
     // Expose additional methods for direct use
@@ -47,6 +48,7 @@ export function CartProvider({ children }) {
     cartData.cartItems,
     cartData.total,
     cartData.loading,
+    cartData.itemLoading,
     cartData.totalItems,
     dispatch,
     cartData.addToCart,

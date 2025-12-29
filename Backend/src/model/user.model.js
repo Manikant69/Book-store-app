@@ -36,36 +36,6 @@ const userSchema = mongoose.Schema({
     wishlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Book"
-    }],
-    orders: [{
-        orderId: String,
-        items: [{
-            bookId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Book"
-            },
-            quantity: Number,
-            price: Number
-        }],
-        totalAmount: Number,
-        shippingAddress: String,
-        paymentMethod: {
-            type: String,
-            default: "COD"
-        },
-        status: {
-            type: String,
-            enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
-            default: "pending"
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        },
-        updatedAt: {
-            type: Date,
-            default: Date.now
-        }
     }]
 }, { timestamps: true
 })

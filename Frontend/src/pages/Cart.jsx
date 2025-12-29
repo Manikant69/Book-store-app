@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft } from 'lucide-react';
 import { Navbar } from '../components/navbar/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -11,6 +11,7 @@ import Toast from '../utils/toast';
 function Cart() {
   const { state, updateQuantity, removeFromCart, fetchCart } = useCartContext();
   const { createOrder } = useOrder();
+  const navigate = useNavigate();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [shippingAddress, setShippingAddress] = useState('');
   const userId = localStorage.getItem('userId');
@@ -18,7 +19,7 @@ function Cart() {
   useEffect(() => {
     if (!userId) {
       Toast.warning('Please login to view cart');
-      window.location.href = '/login';
+      navigate('/login');
       return;
     }
 
@@ -72,7 +73,7 @@ function Cart() {
     if (result) {
       // Clear cart after successful order
       setTimeout(() => {
-        window.location.href = '/orders';
+        navigate('/orders');
       }, 1500);
     }
     setCheckoutLoading(false);
@@ -80,8 +81,14 @@ function Cart() {
 
   if (state.loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <Loader />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navbar />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <Loader />
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -181,21 +188,32 @@ function Cart() {
                         <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                           <button
                             onClick={() => handleUpdateQuantity(item.id || item._id, item.quantity - 1)}
-                            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                            disabled={state.loading}
+                            className={`p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors ${
+                              state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={state.itemLoading[item.id || item._id]}
                           >
                             <Minus className="h-4 w-4" />
                           </button>
-                          <span className="px-3 py-1 text-sm font-medium text-gray-900 dark:text-white min-w-[2rem] text-center">
+                          <span className={`px-3 py-1 text-sm font-medium text-gray-900 dark:text-white min-w-[2rem] text-center transition-opacity ${
+                            state.itemLoading[item.id || item._id] ? 'opacity-50' : ''
+                          }`}>
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => handleUpdateQuantity(item.id || item._id, item.quantity + 1)}
-                            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                            disabled={state.loading}
+                            className={`p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors ${
+                              state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={state.itemLoading[item.id || item._id]}
                           >
                             <Plus className="h-4 w-4" />
                           </button>
+                          {state.itemLoading[item.id || item._id] && (
+                            <div className="ml-2 p-1">
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-600"></div>
+                            </div>
+                          )}
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-bold text-gray-900 dark:text-white">
@@ -237,32 +255,45 @@ function Cart() {
                           </div>
                           <button
                             onClick={() => handleRemoveItem(item.id || item._id)}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
-                            disabled={state.loading}
+                            className={`p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 ${
+                              state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={state.itemLoading[item.id || item._id]}
                           >
                             <Trash2 className="h-5 w-5" />
                           </button>
                         </div>
                         
                         <div className="flex justify-between items-center">
-                          <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
+                          <div className="relative flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
                             <button
                               onClick={() => handleUpdateQuantity(item.id || item._id, item.quantity - 1)}
-                              className="p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-l-xl transition-all duration-200"
-                              disabled={state.loading}
+                              className={`p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-l-xl transition-all duration-200 ${
+                                state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                              disabled={state.itemLoading[item.id || item._id]}
                             >
                               <Minus className="h-4 w-4" />
                             </button>
-                            <span className="px-6 py-2 text-lg font-semibold text-gray-900 dark:text-white min-w-[3rem] text-center border-x border-gray-200 dark:border-gray-600">
+                            <span className={`px-6 py-2 text-lg font-semibold text-gray-900 dark:text-white min-w-[3rem] text-center border-x border-gray-200 dark:border-gray-600 transition-opacity ${
+                              state.itemLoading[item.id || item._id] ? 'opacity-50' : ''
+                            }`}>
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => handleUpdateQuantity(item.id || item._id, item.quantity + 1)}
-                              className="p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-r-xl transition-all duration-200"
-                              disabled={state.loading}
+                              className={`p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-r-xl transition-all duration-200 ${
+                                state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                              disabled={state.itemLoading[item.id || item._id]}
                             >
                               <Plus className="h-4 w-4" />
                             </button>
+                            {state.itemLoading[item.id || item._id] && (
+                              <div className="absolute -right-10 p-1">
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-teal-600"></div>
+                              </div>
+                            )}
                           </div>
                           <div className="text-right">
                             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">

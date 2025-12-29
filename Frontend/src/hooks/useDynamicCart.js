@@ -7,6 +7,7 @@ export const useDynamicCart = () => {
   
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [itemLoading, setItemLoading] = useState({}); // Track loading state for individual items
   const [total, setTotal] = useState(0);
   const [initialized, setInitialized] = useState(false);
   
@@ -108,42 +109,91 @@ export const useDynamicCart = () => {
     }
   };
 
-  // Update quantity
+  // Update quantity with optimistic updates
   const updateQuantity = async (bookId, newQuantity) => {
     if (!userId || newQuantity < 1) return;
 
-    console.log('Updating quantity:', { userId, bookId, newQuantity }); // Debug log
-    setLoading(true);
+    console.log('Updating quantity:', { userId, bookId, newQuantity });
+    
+    // Set item-specific loading
+    setItemLoading(prev => ({ ...prev, [bookId]: true }));
+    
+    // Optimistic update - immediately update the UI
+    setCartItems(prevItems => 
+      prevItems.map(item => 
+        (item.id === bookId || item._id === bookId) 
+          ? { ...item, quantity: newQuantity }
+          : item
+      )
+    );
+    
+    // Recalculate total optimistically
+    const updatedItems = cartItems.map(item => 
+      (item.id === bookId || item._id === bookId) 
+        ? { ...item, quantity: newQuantity }
+        : item
+    );
+    setTotal(calculateTotal(updatedItems));
+    
     try {
       const result = await apiUpdateQuantity(userId, bookId, newQuantity);
-      console.log('Update quantity result:', result); // Debug log
-      // Refresh cart data immediately
-      await fetchCart();
+      console.log('Update quantity result:', result);
+      
+      // Only refresh if the API call failed or returned different data
+      if (!result || result.error) {
+        await fetchCart();
+      }
     } catch (error) {
       console.error('Error updating quantity:', error);
       Toast.error('Failed to update quantity');
+      // Revert optimistic update on error
+      await fetchCart();
     } finally {
-      setLoading(false);
+      setItemLoading(prev => {
+        const newState = { ...prev };
+        delete newState[bookId];
+        return newState;
+      });
     }
   };
 
-  // Remove item from cart
+  // Remove item from cart with optimistic updates
   const removeFromCart = async (bookId) => {
     if (!userId) return;
 
-    console.log('Removing from cart:', { userId, bookId }); // Debug log
-    setLoading(true);
+    console.log('Removing from cart:', { userId, bookId });
+    
+    // Set item-specific loading
+    setItemLoading(prev => ({ ...prev, [bookId]: true }));
+    
+    // Optimistic update - immediately remove from UI
+    const itemToRemove = cartItems.find(item => item.id === bookId || item._id === bookId);
+    setCartItems(prevItems => 
+      prevItems.filter(item => item.id !== bookId && item._id !== bookId)
+    );
+    
+    // Recalculate total optimistically
+    const updatedItems = cartItems.filter(item => item.id !== bookId && item._id !== bookId);
+    setTotal(calculateTotal(updatedItems));
+    
     try {
       const result = await apiRemoveFromCart(userId, bookId);
-      console.log('Remove from cart result:', result); // Debug log
-      // Refresh cart data immediately
-      await fetchCart();
+      console.log('Remove from cart result:', result);
       Toast.success('Item removed from cart');
     } catch (error) {
       console.error('Error removing from cart:', error);
       Toast.error('Failed to remove item from cart');
+      // Revert optimistic update on error
+      if (itemToRemove) {
+        setCartItems(prevItems => [...prevItems, itemToRemove]);
+        setTotal(calculateTotal([...cartItems]));
+      }
     } finally {
-      setLoading(false);
+      setItemLoading(prev => {
+        const newState = { ...prev };
+        delete newState[bookId];
+        return newState;
+      });
     }
   };
 
@@ -174,6 +224,7 @@ export const useDynamicCart = () => {
   return {
     cartItems,
     loading,
+    itemLoading, // Expose item-specific loading states
     total,
     addToCart,
     updateQuantity,

@@ -80,27 +80,32 @@ export function CartSidebar() {
                       <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() => handleQuantityChange(item.id || item._id, item.quantity - 1)}
-                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-                          disabled={state.loading}
+                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                          disabled={state.itemLoading[item.id || item._id]}
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus className={`h-4 w-4 ${state.itemLoading[item.id || item._id] ? 'opacity-50' : ''}`} />
                         </button>
-                        <span className="w-8 text-center dark:text-white">
+                        <span className={`w-8 text-center dark:text-white transition-opacity ${state.itemLoading[item.id || item._id] ? 'opacity-50' : ''}`}>
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => handleQuantityChange(item.id || item._id, item.quantity + 1)}
-                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-                          disabled={state.loading}
+                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                          disabled={state.itemLoading[item.id || item._id]}
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus className={`h-4 w-4 ${state.itemLoading[item.id || item._id] ? 'opacity-50' : ''}`} />
                         </button>
+                        {state.itemLoading[item.id || item._id] && (
+                          <div className="ml-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-600"></div>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <button
                       onClick={() => handleRemoveItem(item.id || item._id)}
-                      className="text-red-500 hover:text-red-600 p-1"
-                      disabled={state.loading}
+                      className={`text-red-500 hover:text-red-600 p-1 transition-colors ${state.itemLoading[item.id || item._id] ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={state.itemLoading[item.id || item._id]}
                     >
                       <X className="h-5 w-5" />
                     </button>

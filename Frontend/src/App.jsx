@@ -22,32 +22,41 @@ import { BOOK_API_END_POINT } from './utils/constants';
 
 const App = () => {
 
-  const [books, setBooks] =  useState([]);
+  const [books, setBooks] = useState([]);
+  const [booksLoading, setBooksLoading] = useState(true);
 
-  const addBook = (book)=>{
+  const addBook = (book) => {
     setBooks((prev) => [book, ...prev]);
   }
 
-  const deleteBook = (id)=>{
+  const deleteBook = (id) => {
     setBooks((prev) => prev.filter((book) => book._id !== id));
   }
   
-  useEffect(()=>{
-    async function fetchData(){
-      const res = await axios.get(`${BOOK_API_END_POINT}`);
-
-      if(res){
-        setBooks(res.data.books);
+  useEffect(() => {
+    async function fetchData() {
+      setBooksLoading(true);
+      try {
+        const res = await axios.get(`${BOOK_API_END_POINT}`);
+        if (res && res.data && res.data.books) {
+          setBooks(res.data.books);
+        } else {
+          setBooks([]);
+        }
+      } catch (error) {
+        console.error('Error fetching books:', error);
+        setBooks([]);
+      } finally {
+        setBooksLoading(false);
       }
     }
 
     fetchData();
-
   }, [])
 
   return (
     <CartProvider>
-    <BookProvider value={{books, addBook, deleteBook}}>
+    <BookProvider value={{books, booksLoading, addBook, deleteBook}}>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />

@@ -14,7 +14,6 @@ router.route("/:bookId").get(getBook);
 router.route("/add").post(upload.single("coverImage"), addBook);
 router.route("/update/:bookId").put(upload.single("coverImage"), updateBook);
 router.route("/delete/:bookId").delete(deleteBook);
-router.route("/:bookId/reviews").get(getReviews);
-router.route("/:bookId/reviews/add").post(addReview);
+router.route("/:bookId/reviews").get(getReviews).post(addReview);
 
 export default router;

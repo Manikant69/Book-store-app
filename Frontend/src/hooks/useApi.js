@@ -326,12 +326,33 @@ export const useOrder = () => {
   };
 
   const getUserOrders = async (userId) => {
+    // Validate userId format (MongoDB ObjectId is 24 characters)
+    if (!userId || userId.length !== 24) {
+      return { success: false, error: 'Invalid session. Please login again.', orders: [] };
+    }
+    
     try {
-      const res = await axios.get(`${ORDER_API_END_POINT}/${userId}`);
-      return res.data.orders;
+      const url = `${ORDER_API_END_POINT}/${userId}`;
+      
+      const res = await axios.get(url, {
+        timeout: 5000, // Increased to 5 seconds
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      return res.data; // Return the full response with success flag
     } catch (error) {
-      Toast.error('Error fetching orders');
-      return [];
+      // Enhanced error handling
+      if (error.code === 'ECONNABORTED') {
+        return { success: false, error: 'Request timed out. Please check your connection.', orders: [] };
+      } else if (error.response?.status === 404 || error.response?.data?.message?.includes('User not found')) {
+        return { success: false, error: 'Invalid session. Please login again.', orders: [] };
+      } else if (error.response?.data?.message) {
+        return { success: false, error: error.response.data.message, orders: [] };
+      } else {
+        return { success: false, error: error.message || 'An unexpected error occurred', orders: [] };
+      }
     }
   };
 

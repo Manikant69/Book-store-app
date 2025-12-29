@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/navbar/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { useWishlist, useCart } from '../hooks/useApi';
@@ -9,6 +10,7 @@ import Toast from '../utils/toast';
 function Wishlist() {
   const { getWishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [wishlistBooks, setWishlistBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem('userId');
@@ -16,7 +18,7 @@ function Wishlist() {
   useEffect(() => {
     if (!userId) {
       Toast.warning('Please login to view wishlist');
-      window.location.href = '/login';
+      navigate('/login');
       return;
     }
 
@@ -49,8 +51,18 @@ function Wishlist() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <Loader />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-4 py-12">
+          <h1 className="text-3xl font-bold mb-8 dark:text-white flex items-center gap-2">
+            <Heart className="text-red-500" />
+            My Wishlist
+          </h1>
+          <div className="flex justify-center items-center min-h-[400px]">
+            <Loader />
+          </div>
+        </div>
+        <Footer />
       </div>
     );
   }

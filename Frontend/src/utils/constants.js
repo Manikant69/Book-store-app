@@ -10,12 +10,13 @@ export const CART_API_END_POINT = `${API_BASE_URL}/cart`;
 export const WISHLIST_API_END_POINT = `${API_BASE_URL}/wishlist`;
 export const ORDER_API_END_POINT = `${API_BASE_URL}/orders`;
 export const SETTINGS_API_END_POINT = `${API_BASE_URL}/settings`;
+export const TEAM_API_END_POINT = `${API_BASE_URL}/team`;
 
 // Default site settings - used as fallbacks when API data is not available
 export const DEFAULT_SITE_SETTINGS = {
   email: 'support@bookspot.com',
   phone: '+91-9876543210',
-  address: '123 Book Street, Library City, India - 110001',
+  address: '123 Book Street, Jaipur, India - 110001',
   siteName: 'BookSpot',
   siteDescription: 'Your one-stop destination for books',
   socialLinks: {

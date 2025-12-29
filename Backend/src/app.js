@@ -8,6 +8,7 @@ import cartRoute from './route/cart.route.js';
 import wishlistRoute from './route/wishlist.route.js';
 import orderRoute from './route/order.route.js';
 import siteSettingsRoute from './route/siteSettings.route.js';
+import teamRoute from './route/team.route.js';
 
 
 const app = express()
@@ -23,6 +24,7 @@ app.use('/api/cart', cartRoute);
 app.use('/api/wishlist', wishlistRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/settings', siteSettingsRoute);
+app.use('/api/team', teamRoute);
 
 
 export default app;

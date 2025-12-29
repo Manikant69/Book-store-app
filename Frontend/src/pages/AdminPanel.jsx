@@ -7,8 +7,9 @@ import { BooksManagement } from '../components/admin/BooksManagement';
 import { OrdersManagement } from '../components/admin/OrdersManagement';
 import { GenresManagement } from '../components/admin/GenresManagement';
 import { SiteSettingsManagement } from '../components/admin/SiteSettingsManagement';
+import { TeamManagement } from '../components/admin/TeamManagement';
 import { AdminStats } from '../components/admin/AdminStats';
-import { Users, Book, ShoppingCart, Tag, BarChart3, Settings } from 'lucide-react';
+import { Users, Book, ShoppingCart, Tag, BarChart3, Settings, UserCheck } from 'lucide-react';
 import Toast from '../utils/toast';
 
 const TABS = [
@@ -17,6 +18,7 @@ const TABS = [
   { id: 'books', label: 'Books', icon: Book },
   { id: 'orders', label: 'Orders', icon: ShoppingCart },
   { id: 'genres', label: 'Genres', icon: Tag },
+  { id: 'team', label: 'Team', icon: UserCheck },
   { id: 'settings', label: 'Settings', icon: Settings }
 ];
 
@@ -34,7 +36,18 @@ function AdminPanel() {
   }, [userRole, navigate]);
 
   if (userRole !== 'admin') {
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-2 dark:text-white">Access Denied</h2>
+            <p className="text-gray-600 dark:text-gray-400">Redirecting to home page...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   const renderTabContent = () => {
@@ -49,6 +62,8 @@ function AdminPanel() {
         return <OrdersManagement />;
       case 'genres':
         return <GenresManagement />;
+      case 'team':
+        return <TeamManagement />;
       case 'settings':
         return <SiteSettingsManagement />;
       default:

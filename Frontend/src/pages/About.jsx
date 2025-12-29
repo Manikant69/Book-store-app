@@ -1,9 +1,54 @@
+import { useState, useEffect } from 'react';
 import { Navbar } from '../components/navbar/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { BookOpen, Navigation2, Heart, Users, BookMarked, Coffee } from 'lucide-react';
+import { BookOpen, Navigation2, Heart, Users, BookMarked, Coffee, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { TEAM_API_END_POINT } from '../utils/constants';
 
 function About() {
+  const [team, setTeam] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch(`${TEAM_API_END_POINT}/public`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setTeam(data.teamMembers || []);
+      }
+    } catch (error) {
+      console.error('Error fetching team members:', error);
+      // Fallback to static data if API fails
+      setTeam([
+        {
+          name: 'Sarah Chen',
+          tech: 'Lead Developer',
+          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
+          bio: 'Passionate about creating seamless reading experiences'
+        },
+        {
+          name: 'Alex Rivera',
+          tech: 'UI/UX Designer',
+          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+          bio: 'Crafting beautiful interfaces for book lovers'
+        },
+        {
+          name: 'Emily Watson',
+          tech: 'Content Curator',
+          image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80',
+          bio: 'Finding the best books for our readers'
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const features = [
     {
       icon: BookOpen,
@@ -34,27 +79,6 @@ function About() {
       icon: Coffee,
       title: 'Reading Goals',
       description: 'Set and achieve your reading goals'
-    }
-  ];
-
-  const team = [
-    {
-      name: 'Sarah Chen',
-      role: 'Lead Developer',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
-      bio: 'Passionate about creating seamless reading experiences'
-    },
-    {
-      name: 'Alex Rivera',
-      role: 'UI/UX Designer',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-      bio: 'Crafting beautiful interfaces for book lovers'
-    },
-    {
-      name: 'Emily Watson',
-      role: 'Content Curator',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&q=80',
-      bio: 'Finding the best books for our readers'
     }
   ];
 
@@ -119,31 +143,64 @@ function About() {
           <h2 className="text-3xl font-bold text-center mb-12 dark:text-white">
             Meet Our Team
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="font-semibold text-lg mb-1 dark:text-white">
-                    {member.name}
-                  </h3>
-                  <p className="text-teal-600 dark:text-teal-400 text-sm mb-3">
-                    {member.role}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {member.bio}
-                  </p>
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {team.map((member, index) => (
+                <div
+                  key={member._id || index}
+                  className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700"
+                >
+                  <div className="relative">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <div className="p-6 text-center">
+                    <h3 className="font-bold text-xl mb-2 text-gray-900 dark:text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-teal-600 dark:text-teal-400 font-medium text-sm uppercase tracking-wider mb-3 bg-teal-50 dark:bg-teal-900/20 px-3 py-1 rounded-full inline-block">
+                      {member.tech}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-5 min-h-[3rem]">
+                      {member.bio}
+                    </p>
+                    {(member.linkedinLink || member.githubLink) && (
+                      <div className="flex justify-center space-x-4 pt-2">
+                        {member.linkedinLink && (
+                          <a
+                            href={member.linkedinLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 hover:text-blue-700 rounded-full transition-all duration-200 transform hover:scale-110"
+                          >
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                        {member.githubLink && (
+                          <a
+                            href={member.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2.5 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white rounded-full transition-all duration-200 transform hover:scale-110"
+                          >
+                            <Github className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* CTA Section */}

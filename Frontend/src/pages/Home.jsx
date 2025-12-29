@@ -9,7 +9,7 @@ import {useBook} from "../context/BookContext"
 
 function Home() {
 
-  const {books} = useBook();
+  const {books = [], booksLoading = false} = useBook() || {};
   
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -17,7 +17,7 @@ function Home() {
       <main>
         <Banner />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <BookGrid title="Featured Books" books={books} />
+          <BookGrid title="Featured Books" books={books} isLoading={booksLoading} />
           <PopularGenres />
           <WhyChooseUs />
         </div>
